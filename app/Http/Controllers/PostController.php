@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index()
     {
         $data = Post::with(['user'])->paginate(5);
@@ -43,7 +48,8 @@ class PostController extends Controller
             ]);
         }
 
-        $response = Post::create($data);
+        // $response = Post::create($data);
+        $response = request()->user()->posts()->create($data);
         return response()->json($response, 201);
     }
 
